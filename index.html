@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            color: aliceblue;
+            background-image: url('picture1.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #task-container {
+            max-width: 800px;
+            width: 100%;
+            background-image: url('picture1.jpg');
+            background-size: cover;
+            background-position: center;
+            color: aliceblue;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            position: relative;
+        }
+
+        #form-container {
+            background-image: url('picture1.jpg');
+            background-size: cover;
+            background-position: center;
+            color: aliceblue;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .task {
+            
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-details {
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+
+        .task-label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fbf9f9;
+            margin-bottom: 5px;
+        }
+
+        .deadline {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .priority-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .high-priority {
+            color: #e74c3c;
+        }
+
+        .medium-priority {
+            color: #f39c12;
+        }
+
+        .low-priority {
+            color: #27ae60;
+        }
+
+        #add-task-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #add-task-form label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fffbfb;
+        }
+
+        #add-task-form input,
+        #add-task-form select,
+        #add-task-form button {
+            margin-bottom: 10px;
+            padding: 10px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #progress-container {
+            margin-top: 20px;
+        }
+
+        h2{
+            color: #000000;
+        }
+
+        #progress-bar {
+            background-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+
+<div id="task-container">
+    <h2>Task Management System</h2>
+
+    <div id="form-container">
+        <form id="add-task-form">
+            <label for="task-label">Task:</label>
+            <input type="text" id="task-label" required>
+            
+            <label for="deadline">Deadline:</label>
+            <input type="date" id="deadline" required>
+            
+            <label for="priority">Priority:</label>
+            <select id="priority" required>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
+
+    <div id="task-list"></div>
+
+    <div id="progress-container">
+        <h3>Task Progress</h3>
+        <progress id="progress-bar" max="100" value="0"></progress>
+    </div>
+</div>
+
+<script>
+    const taskList = document.getElementById('task-list');
+    const addTaskForm = document.getElementById('add-task-form');
+    const progressBar = document.getElementById('progress-bar');
+
+    addTaskForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const taskLabel = document.getElementById('task-label').value;
+        const deadline = document.getElementById('deadline').value;
+        const priority = document.getElementById('priority').value;
+
+        const taskElement = document.createElement('div');
+        taskElement.classList.add('task');
+        taskElement.classList.add(`${priority}-priority`);
+
+        const taskDetails = document.createElement('div');
+        taskDetails.classList.add('task-details');
+
+        const taskLabelElement = document.createElement('div');
+        taskLabelElement.classList.add('task-label');
+        taskLabelElement.textContent = taskLabel;
+
+        const deadlineElement = document.createElement('div');
+        deadlineElement.classList.add('deadline');
+        deadlineElement.textContent = `Deadline: ${deadline}`;
+
+        taskDetails.appendChild(taskLabelElement);
+        taskDetails.appendChild(deadlineElement);
+
+        const priorityIcon = document.createElement('div');
+        priorityIcon.classList.add('priority-icon');
+        priorityIcon.textContent = getPriorityIcon(priority);
+
+        taskElement.appendChild(taskDetails);
+        taskElement.appendChild(priorityIcon);
+
+        taskList.appendChild(taskElement);
+
+        updateProgress();
+
+        addTaskForm.reset();
+    });
+
+    function getPriorityIcon(priority) {
+        switch (priority) {
+            case 'high':
+                return '🔴'; 
+            case 'medium':
+                return '🟡'; 
+            case 'low':
+                return '🟢'; 
+            default:
+                return '';
+        }
+    }
+
+    function updateProgress() {
+        const totalTasks = document.querySelectorAll('.task').length;
+        const completedTasks = document.querySelectorAll('.task input[type="checkbox"]:checked').length;
+        const progressPercentage = (completedTasks / totalTasks) * 100 || 0;
+
+        progressBar.value = progressPercentage;
+    }
+    addTaskForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    taskElement.classList.add('completed'); 
+    updateProgress();
+    addTaskForm.reset();
+});
+</script>
+
+</body>
+</html>
+
